@@ -12,15 +12,15 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:3000/movies/4/
+GET  http://localhost:3000/movies/3/
 
 ###
-PUT http://localhost:3000/movies/12/
+PUT http://localhost:3000/movies/13/
 Content-Type: application/json
 
 {
   "directorId": 24,
-  "movieName": "Thor",
+  "movieName": "yaada",
   "leadActor": "Christopher Hemsworth"
 }
 
@@ -31,4 +31,4 @@ DELETE http://localhost:3000/movies/13/
 GET http://localhost:3000/directors/
 
 ###
-GET  http://localhost:3000/directors/3/movies
+GET  http://localhost:3000/directors/5/movies

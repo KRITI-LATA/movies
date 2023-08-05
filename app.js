@@ -32,7 +32,7 @@ const convertDbObjectToResponseObject = (dbObject) => {
     movieId: dbObject.movie_id,
     movieId: dbObject.id,
     directorId: dbObject.director_id,
-    moviesName: dbObject.movie_name,
+    movieName: dbObject.movie_name,
     leadActor: dbObject.lead_actor,
     directorName: dbObject.director_name,
   };
@@ -40,7 +40,7 @@ const convertDbObjectToResponseObject = (dbObject) => {
 //get movie name API
 app.get("/movies/", async (request, response) => {
   const getMoviesName = `
-    select * from movie;`;
+    select movie_name from movie;`;
   const movieArray = await db.all(getMoviesName);
   response.send(
     movieArray.map((eachMovie) => convertDbObjectToResponseObject(eachMovie))
@@ -51,12 +51,12 @@ app.get("/movies/", async (request, response) => {
 
 app.post("/movies/", async (request, response) => {
   const movieDetail = request.body;
-  const { directorId, moviesName, leadActor } = movieDetail;
+  const { directorId, movieName, leadActor } = movieDetail;
   const addmovieArray = `
     insert into movie (director_id, movie_name, lead_actor)
     values
     (${directorId},
-    '${moviesName}',
+    '${movieName}',
     '${leadActor}')
     ;`;
   const dbResponse = await db.run(addmovieArray);
@@ -69,7 +69,7 @@ app.post("/movies/", async (request, response) => {
 app.get("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
   const movieDetailQuery = `select * from movie where 
-   movie_id = ${movieId};`;
+   id = ${movieId};`;
   const movieParticularDetail = await db.get(movieDetailQuery);
   response.send(convertDbObjectToResponseObject(movieParticularDetail));
 });
@@ -79,9 +79,9 @@ app.get("/movies/:movieId/", async (request, response) => {
 app.put("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
   const movieDetail = request.body;
-  const { directorId, moviesName, leadActor } = movieDetail;
+  const { directorId, movieName, leadActor } = movieDetail;
   const updateMovieQuery = `update movie set 
-    director_id = ${directorId}, movie_name = '${moviesName}', 
+    director_id = ${directorId}, movie_name = '${movieName}', 
     lead_actor = '${leadActor}' where movie_id = ${movieId};
     `;
   await db.run(updateMovieQuery);
