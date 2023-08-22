@@ -30,7 +30,6 @@ initializerDBAndServer();
 const convertDbObjectToResponseObject = (dbObject) => {
   return {
     movieId: dbObject.movie_id,
-    movieId: dbObject.id,
     directorId: dbObject.director_id,
     movieName: dbObject.movie_name,
     leadActor: dbObject.lead_actor,
@@ -69,7 +68,7 @@ app.post("/movies/", async (request, response) => {
 app.get("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
   const movieDetailQuery = `select * from movie where 
-   id = ${movieId};`;
+   movie_id = ${movieId};`;
   const movieParticularDetail = await db.get(movieDetailQuery);
   response.send(convertDbObjectToResponseObject(movieParticularDetail));
 });
@@ -109,8 +108,8 @@ app.get("/directors/", async (request, response) => {
 //Returns a list of all movie names directed by a specific director
 app.get("/directors/:directorId/movies/", async (request, response) => {
   const { directorId } = request.params;
-  const getSpecificDirecor = `select movie_name from movie
-    where director_id = ${directorId};`;
-  const directorName = await db.get(getSpecificDirecor);
-  response.send(convertDbObjectToResponseObject(directorName));
+  const getSpecificDirecor = `select movie.movie_name as movieName from movie 
+  natural join director where director_id = ${directorId};`;
+  const directorResult = await db.all(getSpecificDirecor);
+  response.send(directorResult);
 });
